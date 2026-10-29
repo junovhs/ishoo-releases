@@ -12,4 +12,7 @@ if ((($path -split ';') | Where-Object { $_ }) -notcontains $dir) {
     [Environment]::SetEnvironmentVariable('Path', (($path.TrimEnd(';'), $dir) -join ';').TrimStart(';'), 'User')
 }
 $env:Path = "$env:Path;$dir"
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    Write-Host "Ishoo keeps each project's history with Git, which isn't installed yet. Install it with: winget install --id Git.Git -e"
+}
 Write-Host "Ishoo is installed. Run: ishoo"
