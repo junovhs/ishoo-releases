@@ -13,6 +13,16 @@ if ((($path -split ';') | Where-Object { $_ }) -notcontains $dir) {
 }
 $env:Path = "$env:Path;$dir"
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-    Write-Host "Ishoo keeps each project's history with Git, which isn't installed yet. Install it with: winget install --id Git.Git -e"
+    Write-Host "Ishoo keeps each project's history with Git, which isn't installed yet."
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        $answer = Read-Host "Install Git now? This runs: winget install --id Git.Git -e [Y/n]"
+        if ($answer -eq '' -or $answer -match '^[Yy]') {
+            winget install --id Git.Git -e --source winget --accept-package-agreements --accept-source-agreements
+        } else {
+            Write-Host "Skipped. Ishoo's setup can install it later too."
+        }
+    } else {
+        Write-Host "Install it from https://git-scm.com/download/win, or let Ishoo's setup help."
+    }
 }
 Write-Host "Ishoo is installed. Run: ishoo"
